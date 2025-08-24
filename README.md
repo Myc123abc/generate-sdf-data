@@ -9,3 +9,8 @@ The detail about sdf bitmap data look at: [freetype-render-sdf](https://freetype
 ```
 usage: generate-sdf-data <font path> <unicode> <pixel size> <output file>
 ```
+
+##### example
+```
+generate-sdf-data.exe NotoSansJP-Regular.ttf 0xfffd 32 output.h
+```
