@@ -1,0 +1,4 @@
+build
+freetype
+.cache
+output.hpp
