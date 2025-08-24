@@ -1,4 +1,5 @@
 build
 freetype
 .cache
-output.hpp
+*.hpp
+*.h

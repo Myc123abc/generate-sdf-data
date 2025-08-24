@@ -6,10 +6,11 @@
 #include <filesystem>
 
 std::string program_name;
+std::string output_file;
 
 void print_help()
 {
-  std::cout << "usage: " << program_name << " <font path> <unicode> <pixel size>" << std::endl;
+  std::cout << "usage: " << program_name << " <font path> <unicode> <pixel size> <output file>" << std::endl;
 }
 
 void check(bool b, char const* msg)
@@ -23,12 +24,13 @@ void check(bool b, char const* msg)
 
 void store_sdf_bitmap(FT_Bitmap bitmap)
 {
-  std::ofstream file("output.hpp");
-  file << "#pragma once\n"
+  std::ofstream file(output_file);
+  file << "#ifndef GLYPH_SDF_BITMAP_H\n"
+       << "#define GLYPH_SDF_BITMAP_H\n"
        << "\n"
-       << "constexpr auto Missing_Glyph_Width = " << bitmap.width << ";\n"
-       << "constexpr auto Missing_Glyph_Height = " << bitmap.rows << ";\n"
-       << "constexpr unsigned char Missing_Glyph_Bitmap[] = {\n";
+       << "#define Glyph_Width  " << bitmap.width << "\n"
+       << "#define Glyph_Height " << bitmap.rows << "\n"
+       << "static const unsigned char Glyph_SDF_Bitmap[] = {\n";
 
   for (auto i = 0; i < bitmap.rows; ++i)
   {
@@ -40,13 +42,14 @@ void store_sdf_bitmap(FT_Bitmap bitmap)
     file << "\n";
   }
   file << "};\n";
+  file << "\n#endif";
 }
 
 int main(int argc, char** argv)
 {
   program_name = std::filesystem::path(argv[0]).stem().string();
-  
-  if (argc != 4)
+
+  if (argc != 5)
   {
     print_help();
     exit(1);
@@ -55,6 +58,7 @@ int main(int argc, char** argv)
   auto font_path  = argv[1];
   auto unicode    = strtol(argv[2], nullptr, 0);
   auto pixel_size = atoi(argv[3]);
+  output_file     = argv[4];
 
   FT_Library ft;
   FT_Face face;
