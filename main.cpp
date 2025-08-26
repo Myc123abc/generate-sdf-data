@@ -23,15 +23,18 @@ void check(bool b, char const* msg)
   }
 }
 
-void store_sdf_bitmap(FT_Bitmap bitmap)
+void store_sdf_bitmap(FT_GlyphSlot glyph_slot)
 {
+  auto bitmap = glyph_slot->bitmap;
   std::ofstream file(output_file);
   file << "#ifndef GLYPH_SDF_BITMAP_H\n"
        << "#define GLYPH_SDF_BITMAP_H\n"
        << "\n"
-       << "#define Glyph_Unicode " << unicode_str  << "\n"
-       << "#define Glyph_Width  "  << bitmap.width << "\n"
-       << "#define Glyph_Height "  << bitmap.rows  << "\n"
+       << "#define Glyph_Unicode "     << unicode_str  << "\n"
+       << "#define Glyph_Width  "      << bitmap.width << "\n"
+       << "#define Glyph_Height "      << bitmap.rows  << "\n"
+       << "#define Glyph_Left_Offset " << glyph_slot->bitmap_left << "\n"
+       << "#define Glyph_Up_Offset "   << -glyph_slot->bitmap_top << "\n"
        << "static const unsigned char Glyph_SDF_Bitmap[] = {\n";
 
   for (auto i = 0; i < bitmap.rows; ++i)
@@ -77,7 +80,7 @@ int main(int argc, char** argv)
   FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER);
   FT_Render_Glyph(face->glyph, FT_RENDER_MODE_SDF);
 
-  store_sdf_bitmap(face->glyph->bitmap);
+  store_sdf_bitmap(face->glyph);
   
   FT_Done_Face(face);
   FT_Done_FreeType(ft);
