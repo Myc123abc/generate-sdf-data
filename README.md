@@ -1,4 +1,4 @@
-A simple program to generate sdf bitmap data to a unsigned char array with width and height and its unicode, left offset, up offset (for baseline and assume origin on left-top corner) in a specific file.  
+A simple program to generate sdf bitmap data and information in the specific file.  
 It can be easy used in c/cpp project to pre-load some sdf glyphs, such as a missing glyph bitmap.
 
 Genrating way use freetype's sdf rendering bitmap. The pixel value is 0~255, in vulkan, you can use `VK_FORMAT_R8_UNORM` image type for it, 
